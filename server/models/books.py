@@ -20,9 +20,9 @@ class Book(db.Model, SerializerMixin):
     description: Mapped[String] = mapped_column(String, nullable=True)
     image: Mapped[String] = mapped_column(String, nullable=True)
 
-    # owner = relationship('User', back_populates='owned_books', cascade="all, delete-orphan")
+    owner = relationship('User', back_populates='owned_books')
     rented_records: Mapped[List["Rent"]] = relationship(
         'Rent', back_populates='book', cascade="all, delete-orphan")
 
-    # rented_users: AssociationProxy[List] = association_proxy(
-    #     'rented_records', 'user')
+    rented_users: AssociationProxy[List] = association_proxy(
+        'rented_records', 'user')
