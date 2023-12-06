@@ -1,13 +1,15 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_migrate import Migrate
 from server.config import db
-# from server.api import api
+from flask_restful import Api, Resource
+# from flask_restful import reqparse, abort, Api, Resource
 from server.models.users import User
 from server.models.books import Book
 from server.models.rents import Rent
 
 
 app = Flask(__name__)
+api = Api(app)
 migrate = Migrate(app, db)
 
 
@@ -17,23 +19,27 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 
-@app.route("/users/")
-def user_list():
-    users = User.query.all()
-    return render_template(users.to_dict())
+class Users(Resource):
+    def get(self):
+        users = [user.to_dict() for user in User.query.all()]
+        return users
 
 
-@app.route("/books/")
-def books_list():
-    books = Book.query.all()
-    return render_template(books.to_dict())
+class Books(Resource):
+    def get(self):
+        books = [book.to_dict() for book in Book.query.all()]
+        return books
 
 
-@app.route("/rents/")
-def rents_list():
-    rents = Rent.query.all()
-    return render_template(rents.to_dict())
+class Rents(Resource):
+    def get(self):
+        rents = [rent.to_dict() for rent in Rent.query.all()]
+        return rents
 
+
+api.add_resource(User, '/users')
+api.add_resource(Books, '/books')
+api.add_resource(Rents, '/rents')
 
 # with app.app_context():
 #     db.create_all()

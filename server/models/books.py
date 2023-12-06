@@ -11,7 +11,7 @@ from server.models.rents import Rent
 
 class Book(db.Model, SerializerMixin):
     __tablename__ = "books"
-    # serialize_rules = ('-user.books')
+    serialize_rules = ('-user.books', )
     id: Mapped[Integer] = mapped_column(Integer, primary_key=True)
     title: Mapped[String] = mapped_column(String, nullable=False)
     author: Mapped[String] = mapped_column(String, nullable=False)

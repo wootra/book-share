@@ -10,7 +10,10 @@ from server.models.rents import Rent
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
-    # serialize_rules = ('-owned_books.rented_users', '-rented_books.owner')
+    serialize_rules = ('-owned_books.owner',
+                       '-rented_books.owner',
+                       '-owned_books.rented_users',
+                       '-rented_books.rented_users')
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[String] = mapped_column(String, nullable=False)
     email: Mapped[String] = mapped_column(String, nullable=False)
