@@ -72,7 +72,7 @@ stateDiagram-v2
 
 ```mermaid
 ---
-title: "[GET] /books"
+title: "response data"
 ---
 classDiagram
 class Book {
@@ -99,12 +99,39 @@ class Rent {
     +int id
     -int renter_id
     -int book_id
-    -User renter
-    -Book book
+    +User renter
+    +Book book
 }
 
 Book <|-- User
 User <|-- Book
 Rent <|-- User
 Rent <|-- Book
+
+```
+
+## client-server communication
+
+### enter app (/home)
+
+```mermaid
+
+sequenceDiagram
+    actor client
+    Note over client: enter into app
+    client ->> server: [GET]/books
+    server ->> database: get all books
+    database ->> server: 
+    server ->> client: Book[]
+    Note over client: store books<br/>in the state
+    
+```
+
+### rent process (/rent)
+
+```mermaid
+sequenceDiagram
+    actor client
+    client ->> server: [GET]/books
+
 ```
