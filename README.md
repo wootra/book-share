@@ -81,8 +81,17 @@ class Book {
     +str author
     -int owner_id
     +str description
+    +DateTime registered_date
+    +BookImage[] images
     +User[] rented_users
     +User owner
+}
+
+class BookImage {
+    +int id
+    +int book_id
+    +str image
+    +str label
 }
 
 class User {
@@ -105,8 +114,9 @@ class Rent {
 
 Book <|-- User
 User <|-- Book
-Rent <|-- User
-Rent <|-- Book
+User <|-- Rent
+Book <|-- Rent
+BookImage <|-- Book
 
 ```
 
@@ -117,21 +127,76 @@ Rent <|-- Book
 ```mermaid
 
 sequenceDiagram
+    autonumber
     actor client
     Note over client: enter into app
-    client ->> server: [GET]/books
-    server ->> database: get all books
-    database ->> server: 
-    server ->> client: Book[]
+    client ->> server: [GET]/books?limit=n&start=m
+    server ->> database: get all books (limited by n, started from m*n)
+    database -->> server: 
+    server -->> client: Book[]
     Note over client: store books<br/>in the state
     
 ```
 
-### rent process (/rent)
+### rent (/rent)
 
 ```mermaid
-sequenceDiagram
-    actor client
-    client ->> server: [GET]/books
+zenuml
+title rent process
+@Actor client
+@Boundary server
+@Database Book
+@Database Rent
+client -> server."[GET]/books?limit=n" {
+    Book.only_available(limit=n, start=0){
+        return "all books limited by limit"
+    }
+    return "Book[] (limited number)"
+}
+// (owner's book cannot be selected on client)
+client -> client : select books 
+opt {
+    client -> server."[GET]/books?limit=n&start=m" {
+        Book.only_available(limit=n, start=m){
+            return "all books limited by limit"
+        }
+        return "Book[] (limited number)"
+    }
+    // (owner's book cannot be selected on client)
+    client -> client : select books 
+}
+// user_id should be added in the header
+client -> server."[POST]/rents with Book[]"{
+    Rent.count(user_id, selected_books){
+        return "count of already rented"
+        
+    }   
+    if("count > 0 : selected book already rented"){
+        @return
+        server->client: 403: already rented
+    }
+    try{
+        while("selected books") {
+            Rent.add(book, user_id)
+        }
+        Rent.commit()
+    }catch{
+        Rent.revert()
+        if("a book's owner is renter"){
+            return "401: owner cannot rent(unauthorized)"
+        }else{
+            return "500: failed"
+        }
+    }
+    
+    return "succeeded" 
+}
+
+```
+
+## lend
+
+```mermaid
+zenuml
 
 ```
