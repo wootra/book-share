@@ -13,7 +13,8 @@ class User(db.Model, SerializerMixin):
     serialize_rules = ('-owned_books.owner',
                        '-rented_books.rented_users'
                        '-rented_records',
-                       '-renter',)
+                       '-renter',
+                       '-password')
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[String] = mapped_column(String, nullable=False)
     email: Mapped[String] = mapped_column(String, nullable=False)
@@ -24,6 +25,5 @@ class User(db.Model, SerializerMixin):
         'Rent', back_populates='renter', cascade="all, delete-orphan")
     owned_books = relationship(
         'Book', back_populates='owner', cascade="all, delete-orphan")
-
     rented_books: AssociationProxy[List] = association_proxy(
         'rented_records', 'book')
