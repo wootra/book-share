@@ -149,235 +149,176 @@ sequenceDiagram
 ### sign up (/sign_up)
 
 ```mermaid
-zenuml
-@Actor client
-@Boundary server
-@Database User
-// user information is given in form data
-client -> server."[GET] /sign-up"{
-    if("validation fails"){
-        return "403: invalid format"
-    }
-    User."count(form_data.email)"{
-        return count
-    }
-    if("count != 0"){
-        return "403: the email already exists"
-    }
-    
-    User.add(new_user){
-        return User
-    }
-    return User
+sequenceDiagram
+actor client
 
-}
-// after login, should route previous page.
-// if the previous page does not exists,
-// go /home
-client -> client : route to previous page
-
+Note over client: user information is given in form data
+client ->> +server: [GET] /sign-up
+alt validation fails
+    server -->> client : 403: invalid format
+end
+server ->> User : count(form_data.email)
+User -->> server : count
+alt count != 0
+    server -->> client : 403: the email already exists
+end
+server ->> User : add(new_user)
+User -->> server : User
+server -->> -client : User
+Note over client: after login, should route previous page.<br/>if the previous page does not exists, <br/> go /home
+client ->> client : route to previous page
 ```
 
 ### log in (/log_in)
 
 ```mermaid
-zenuml
-@Actor client
-@Boundary server
-@Database User
-// user information is given in form data
-client -> server."[GET] /log-in"{
-    if("validation fails"){
-        return "403: invalid format"
-    }
-
-    try{
-        User."get(form_data.email)"{
-            return User
-        }
-    }catch{
-        return "404: the email does not exist"
-    }
-
-    if("password does NOT matches"){
-        return "403: the password does not matches"
-    }
-    
-    return User
-
-}
-// after login, should route previous page.
-// if the previous page does not exists,
-// go /home
+sequenceDiagram
+actor client
+Note over client:  user information is given in form data
+client ->> +server : [GET] /log-in
+    alt validation fails
+        server -->> client: 403: invalid format
+    end
+    server ->> User : get(form_data.email)
+    critical 
+        User -->> server: User
+    option SomeError
+        server -->> client : 404: the email does not exist
+    end
+    alt password does NOT matches
+        server -->> client : 403: the password does not matches
+    end
+server -->> -client : User
+Note over client: after login, should route previous page.<br/>if the previous page does not exists,<br/>go /home
 client -> client : route to previous page
-
 ```
 
 ### rent (/rent)
 
 ```mermaid
-zenuml
-title rent process
-@Actor client
-@Boundary server
-@Database Book
-@Database Rent
-client -> server."[GET]/books?limit=n" {
-    Book.only_available(limit=n, start=0){
-        return "all books limited by limit"
-    }
-    return "Book[] (limited number)"
-}
-// (owner's book cannot be selected on client)
-client -> client : select books 
-opt {
-    client -> server."[GET]/books?limit=n&start=m" {
-        Book.only_available(limit=n, start=m){
-            return "all books limited by limit"
-        }
-        return "Book[] (limited number)"
-    }
-    // (owner's book cannot be selected on client)
-    client -> client : select books 
-}
-// user_id should be added in the header
-client -> server."[POST]/rents with Book[]"{
-    Rent.count(user_id, selected_books){
-        return "count of already rented"
-        
-    }   
-    if("count > 0 : selected book already rented"){
-        @return
-        server->client: 403: already rented
-    }
-    try{
-        while("selected books") {
-            Rent.add(book, user_id)
-        }
-        Rent.commit()
-    }catch{
-        Rent.revert()
-        if("a book's owner is renter"){
-            return "401: owner cannot rent(unauthorized)"
-        }else{
-            return "500: failed"
-        }
-    }
-    
-    return "succeeded" 
-}
+sequenceDiagram
+actor client
+client ->> +server : [GET]/books?limit=n
+    server ->> +Book : only_available(limit=n, start=0)
+    Book -->> -server: all books limited by limit
+server -->> -client : Book[] (limited number)
+client ->> client : select books 
+Note over client: owner's book cannot be selected on client
+opt
+    client ->> +server: [GET]/books?limit=n&start=m
+    server ->> +Book : only_available(limit=n, start=m)
+    Book -->> -server: all books limited by limit
+    server -->> -client: Book[] (limited number)
+    client ->> client : select books 
+end
 
+Note over client: user_id should be added in the header
+client ->> +server: [POST]/rents with Book[]
+    server ->> +Rent: count(user_id, selected_books)
+    Rent -->> -server: count of already rented
+    alt count > 0 : selected book already rented
+        server -->> client: 403: already rented
+    end
+    critical: renting books
+        loop selected books
+            server ->> Rent: add(book, user_id)
+        end
+    option "a book's owner is renter"
+        server ->> Rent: revert
+        server -->> client: 401: owner cannot rent(unauthorized)
+    end
+    server ->> Rent: commit
+    Rent -->> server: 
+server -->> -client: Rent[]
 ```
 
 ## lend (/lend, /userinfo/lend)
 
+### /lend (from nav bar)
+
 ```mermaid
-zenuml
-title /lend (from nav bar)
-@Actor client
-@Boundary server
-@Database Book
-client -> client : /lend
-
-client -> server."[GET]/lends"{
-    // user_id is in header
-    Book.get_owned(user_id){
-        return "Book[]"
-    }
-    return "Book[]"
-}
-
-client -> client: show currently lending books
-// when submit
-opt {
-    // with selected_books
-    // user_id in header
-    client -> server."[POST]/lends"{
-        Book.add(new_book){
-            return
-        }
-        return Book
-    }
-}
+sequenceDiagram
+actor client
+client ->> client: /lend
+Note over client,server: user_id is in header
+client ->> +server: [GET]/lends
+    server ->> +Book: get_owned(user_id)
+    Book -->> -server : Book[]
+server -->> -client: Book[]
+client ->> client: show currently lending books
+Note over client,server: with selected_books<br/>user_id in header
+opt
+    Note over client, server: when submit
+    client ->> +server: [POST]/lends
+        server ->> +Book: add(new_book)
+        Book -->> server: 
+    server -->> -client: Book
+end
 
 ```
 
+### /userinfo/lend (from profile page > lend menu)
+
 ```mermaid
-zenuml
-title /userinfo/lend (from profile page > lend menu)
-@Actor client
-@Boundary server
-@Database Book
-@Database Rent
-client -> client : /userinfo/lend
+sequenceDiagram
+actor client
+client ->> client : /userinfo/lend
+Note over client, server: user_id is in header
+client ->> +server: [GET]/lends
+    server ->> Book: get_owned(user_id)
+    Book -->> server: 
+server -->> -client: Book[]
+client ->> client: show currently lending books
+Note over client: when delete button clicked
 
-client -> server."[GET]/lends"{
-    // user_id is in header
-    Book.get_owned(user_id){
-        return "Book[]"
-    }
-    return "Book[]"
-}
+opt
+    Note over client,server: user_id in header
+    client ->> +server: [DELETE]/lends/{id}
+        server ->> Rent: count(user_id, id)
+        Rent -->> server: count of currently rented book
+        alt "count > 0"
+            server -->> client: 401: the book is currently being rented
+        end
+        server ->> Book: get(id)
+        Book -->> server: Book
+        alt "book.owner_id != user_id"
+            server -->> client: 401: book is not owned by the user
+        end
+        critical deleting
+            server ->> Book : delete(book)
+            Book -->> server: 
+        option failed
+            server -->> client: "500: failed while deleting
+        end
+       
+    server -->> -client: "succeeded"
+end
 
-client -> client: show currently lending books
-// when delete button clicked
-opt {
-    // user_id in header
-    client -> server."[DELETE]/lends/{id}"{
-        Rent.count(user_id, id){
-            return "count of currently rented book"
-        }
-        if(count > 0){
-            return "401: the book is currently being rented"
-        }
-        Book.get(id){
-            return Book
-        }
-        if(book.owner_id != user_id){
-            return "401: book is not owned by the user"
-        }
-        try{
-            Book.delete(book){
-                return
-            }
-            return "succeeded"
-        }catch{
-            return "500: failed while deleting"
-        }
-    }
-}
+Note over client: when submit button is clicked <br/> after changing content
+opt
+    Note over client,server: user_id in header<br/> fields to update are included in body
+    client ->> server: [PATCH]/lends/{id}
+        server ->> Rent: count(user_id, id)
+        Rent -->> server: count of currently rented book
+        
+        server ->> server : sanitize body (remove book price)
+        
+        alt "count > 0 and intersect(body, {price})"
+            server -->> client:  401: price cannot be changed while it is already rented
+        end
+        server ->> Book: get(id)
+        Book -->> server: book
 
-// when submit button is clicked 
-// after changing content
-opt {
-    // user_id in header
-    // fields to update are included in body
-    client -> server."[PATCH]/lends/{id}"{
-        
-        Rent.count(user_id, id){
-            return "count of currently rented book"
-        }
-        
-        server -> server : sanitize body (remove book price)
-        
-        if("count > 0 and intersect(body, {price})"){
-            return "401: price cannot be changed while it is already rented"
-        }
-        Book.get(id){
-            return Book
-        }
-        if(book.owner_id != user_id){
-            return "401: book is not owned by the user"
-        }
-        try{
-            Book."update(updated_book)"{
-                return
-            }
-            return Book
-        }catch{
-            return "500: failed while updating"
-        }
-    }
-}
+        alt "book.owner_id != user_id"
+            server -->> client: 401: book is not owned by the user
+        end
+        critical updating book
+            server ->> Book: update(updated_book)
+            Book -->> server: 
+        option something wrong
+            server -->> client: "500: failed while updating"
+        end
+    server -->> client: Book
+end
 
 ```
