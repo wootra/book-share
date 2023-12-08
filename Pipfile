@@ -9,6 +9,7 @@ sqlalchemy-serializer = "*"
 python-dotenv = "*"
 flask-migrate = "*"
 flask-restful = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
