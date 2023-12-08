@@ -1,10 +1,13 @@
-import MarketingCarousel from '../contexts/Home/MarketingCarousel';
+import { Header } from 'semantic-ui-react';
+import MarketingCarousel from '../components/Home/MarketingCarousel';
 
 const Home = () => {
     return (
-        <div className='layout'>
+        <>
+            <Header as='h1'>Welcome to BookShare!</Header>
             <MarketingCarousel />
-        </div>
+            <div className='layout'>dshjksdh</div>
+        </>
     );
 };
 

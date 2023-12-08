@@ -1,0 +1,35 @@
+.carouselWrapper {
+    width: 100%;
+    > * {
+        width: calc(100% - 4rem);
+        margin-inline: auto;
+    }
+}
+
+.item {
+    height: 20rem;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+img.carouselImage {
+    position: absolute;
+    right: 0;
+    bottom: -10rem;
+    height: 30rem;
+    object-fit: cover;
+    rotate: 20deg;
+    transition: all 0.5s ease-in-out;
+    aspect-ratio: 1;
+    opacity: 0.5;
+}
+
+.item:hover {
+    .carouselImage {
+        rotate: 0deg;
+        bottom: 0;
+        opacity: 1;
+        height: 20rem;
+    }
+}

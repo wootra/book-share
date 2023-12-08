@@ -4,9 +4,6 @@
     position: relative;
 
     > main {
-        > * {
-            background-color: antiquewhite;
-        }
         > :global(.layout) {
             padding-inline: 1rem;
             margin-inline: auto;
