@@ -203,8 +203,7 @@ client ->> +server : [GET]/books?limit=n
     Book -->> -server: all books limited by limit
 server -->> -client : Book[] (limited number)
 client ->> client : select books 
-Note over client: owner's book cannot be selected on client
-opt
+opt owner's book cannot be selected on client
     client ->> +server: [GET]/books?limit=n&start=m
     server ->> +Book : only_available(limit=n, start=m)
     Book -->> -server: all books limited by limit
@@ -269,9 +268,8 @@ client ->> +server: [GET]/lends
     Book -->> server: 
 server -->> -client: Book[]
 client ->> client: show currently lending books
-Note over client: when delete button clicked
 
-opt
+opt when delete button clicked
     Note over client,server: user_id in header
     client ->> +server: [DELETE]/lends/{id}
         server ->> Rent: count(user_id, id)
@@ -294,8 +292,7 @@ opt
     server -->> -client: "succeeded"
 end
 
-Note over client: when submit button is clicked <br/> after changing content
-opt
+opt when submit button is clicked <br/> after changing content
     Note over client,server: user_id in header<br/> fields to update are included in body
     client ->> server: [PATCH]/lends/{id}
         server ->> Rent: count(user_id, id)
