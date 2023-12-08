@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Dropdown, Image, Input, Menu } from 'semantic-ui-react';
 import styles from './Nav.module.css';
+import { useLoginInfo } from '../contexts/LoginContext';
 const Nav = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const pathname = location.pathname;
-
+    const { user } = useLoginInfo();
     const onNavClick = (e, { name }) => navigate(name);
     const onUserInfoClick = (e, { value }) => navigate(value);
-    const loginLabel = 'Songhyeon Jun';
     return (
         <Menu className={styles.nav} pointing secondary>
             <Image src='https://react.semantic-ui.com/logo.png' size='mini' />
@@ -44,27 +44,30 @@ const Nav = () => {
                         placeholder='Search users...'
                     />
                 </Menu.Item>
-                <Dropdown item icon='setting' text={loginLabel}>
-                    <Dropdown.Menu className={styles.userInfo}>
-                        <Dropdown.Item
-                            value='/userinfo/profile'
-                            content='/userinfo/profile'
-                            onClick={onUserInfoClick}
-                        >
-                            Profile
-                        </Dropdown.Item>
+                {user.name ? (
+                    <Dropdown item icon='setting' text={user.name}>
+                        <Dropdown.Menu className={styles.userInfo}>
+                            <Dropdown.Item
+                                value='/userinfo/profile'
+                                content='/userinfo/profile'
+                                onClick={onUserInfoClick}
+                            >
+                                Profile
+                            </Dropdown.Item>
 
-                        <Dropdown.Divider />
-                        <Dropdown.Item>Log Out</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-                <Menu.Item
-                    name='/log-in'
-                    active={pathname === '/log-in'}
-                    onClick={onNavClick}
-                >
-                    Log In
-                </Menu.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item>Log Out</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                ) : (
+                    <Menu.Item
+                        name='/log-in'
+                        active={pathname === '/log-in'}
+                        onClick={onNavClick}
+                    >
+                        Log In
+                    </Menu.Item>
+                )}
             </Menu.Menu>
         </Menu>
     );
