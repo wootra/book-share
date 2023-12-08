@@ -11,8 +11,8 @@ const Nav = () => {
     const onUserInfoClick = (e, { value }) => navigate(value);
     return (
         <nav className={styles.nav}>
-            <Menu pointing secondary>
-                <Image src='https://react.semantic-ui.com/logo.png' />
+            <Menu pointing secondary color='violet'>
+                <Image src='/logo-icon.png' className='rounded-full' />
                 <Menu.Item
                     name='/home'
                     active={pathname === '/home'}

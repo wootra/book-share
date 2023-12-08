@@ -2,6 +2,7 @@
 import { Formik } from 'formik';
 import { Button, Form, Grid, Image, Message } from 'semantic-ui-react';
 import logo from '/logo.png';
+import { NavLink } from 'react-router-dom';
 
 const LogIn = () => (
     <div className='full-size dimmed-background place-center'>
@@ -87,10 +88,22 @@ const LogIn = () => (
                                     />
                                 )}
                             </Form.Field>
-
-                            <Button type='submit' disabled={isSubmitting}>
-                                Submit
-                            </Button>
+                            <div className=''></div>
+                            <div className='flex items-center justify-between h-8'>
+                                <NavLink
+                                    to='/sign-up'
+                                    className='text-sm text-blue-500 hover:text-blue-700'
+                                >
+                                    Create a new account
+                                </NavLink>
+                                <Button
+                                    type='submit'
+                                    primary
+                                    disabled={isSubmitting}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
                         </Form>
                     )}
                 </Formik>
