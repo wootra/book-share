@@ -5,11 +5,31 @@ import CarouselItem from '../CarouselItem';
 
 const MarketingCarousel = () => {
     const marketingObj = [
-        { title: 'Little Princess', image: myPrincessImage },
-        { title: 'Little Princess', image: myPrincessImage },
-        { title: 'Little Princess', image: myPrincessImage },
-        { title: 'Little Princess', image: myPrincessImage },
-        { title: 'Little Princess', image: myPrincessImage },
+        {
+            title: 'My Princess',
+            image: myPrincessImage,
+            detail: 'Dolor laborum quis dolore officia ullamco magna ea eu nulla duis enim excepteur. lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        },
+        {
+            title: 'My Princess 2',
+            image: myPrincessImage,
+            detail: 'Dolor laborum quis dolore officia ullamco magna ea eu nulla duis enim excepteur.',
+        },
+        {
+            title: 'My Princess 3',
+            image: myPrincessImage,
+            detail: 'Dolor laborum quis dolore officia ullamco magna ea eu nulla duis enim excepteur.',
+        },
+        {
+            title: 'My Princess 4',
+            image: myPrincessImage,
+            detail: 'Dolor laborum quis dolore officia ullamco magna ea eu nulla duis enim excepteur.',
+        },
+        {
+            title: 'My Princess 5',
+            image: myPrincessImage,
+            detail: 'Dolor laborum quis dolore officia ullamco magna ea eu nulla duis enim excepteur.',
+        },
     ];
     const settings = {
         dots: true,
@@ -24,8 +44,9 @@ const MarketingCarousel = () => {
                 {marketingObj.map((item, index) => (
                     <CarouselItem
                         key={item.title + index}
-                        title='Little Princess'
+                        title={item.title}
                         image={myPrincessImage}
+                        detail={item.detail}
                     />
                 ))}
             </Slider>

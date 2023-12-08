@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import styles from './index.module.css';
 
-const CarouselItem = ({ children, className, image, title }) => {
+const CarouselItem = ({ children, className, image, title, detail }) => {
     return (
         <div className={`${styles.item} ${className || ''}`}>
             <div className={styles.hoverArea}>
                 <h3 className={styles.initTitle}>{title}</h3>
                 <div className={styles.details}>
-                    <h3> {title}</h3>
+                    <p>{detail}</p>
                 </div>
 
                 <img
@@ -31,6 +31,7 @@ CarouselItem.propTypes = {
     className: PropTypes.string,
     image: PropTypes.string,
     title: PropTypes.string,
+    detail: PropTypes.string,
 };
 
 export default CarouselItem;
