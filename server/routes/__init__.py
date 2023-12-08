@@ -15,27 +15,16 @@ class Users(Resource):
 
     def post(self):
         print("args:", request.args.to_dict())
-        print("body:", request.get_json())
+        print("body:", request.form.to_dict())
         res = {}
         # to validation:
         a = request.args.get("a", type=int, default=0)
         
         print("a is", type(a))
         res["params"] = request.args.to_dict()
-        res["body"] = request.get_json()
+        res["body"] = request.form.to_dict()
 
         return res
-        # parser.add_argument(
-        #     'name', type=int, help='Rate to charge for a resource')
-        # parser.add_argument(
-        #     'age', type=int, help='Rate to charge for b resource')
-        # parser.add_argument(
-        #     'c', type=int, help='Rate to charge for c resource')
-        # parser.add_argument(
-        #     'd', type=int, help='Rate to charge for d resource')
-        # params = parser.parse_args()
-        # print(params)
-        # return params
 
 
 class Books(Resource):

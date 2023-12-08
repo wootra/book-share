@@ -2,7 +2,16 @@
     position: sticky;
     top: 0;
     width: 100%;
-    > img {
-        margin: 0.5rem;
+    background-color: white;
+    z-index: 1000;
+    height: var(--nav-height);
+    > * {
+        height: inherit;
+    }
+    & img {
+        height: inherit;
+        width: auto;
+        aspect-ratio: 1;
+        padding: 0.5rem;
     }
 }

@@ -1,6 +1,8 @@
 import styles from './App.module.css';
 import Nav from './components/Nav';
 import { Route, Routes } from 'react-router-dom';
+import './pages/page-common.css';
+
 import Home from './pages/Home';
 import About from './pages/About';
 import Rent from './pages/Rent';
