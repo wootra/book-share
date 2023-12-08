@@ -1,6 +1,7 @@
 import { Formik } from 'formik';
 import { Button, Form, Grid, Image, Message } from 'semantic-ui-react';
 import logo from '/logo.png';
+import { NavLink } from 'react-router-dom';
 
 const SignUp = () => (
     <div className='full-size dimmed-background place-center'>
@@ -11,9 +12,12 @@ const SignUp = () => (
                 computer={8}
                 verticalAlign='middle'
             >
-                <Image src={logo} size='medium' />
+                <Image src={logo} size='medium' className='mx-auto' />
             </Grid.Column>
-            <Grid.Column mobile={16} tablet={8} computer={4}>
+            <Grid.Column mobile={16} tablet={8} computer={8}>
+                <h1 className='mb-4 text-right uppercase text-sm font-extrabold text-slate-400'>
+                    Sign Up
+                </h1>
                 <Formik
                     initialValues={{ email: '', password: '' }}
                     validate={values => {
@@ -50,7 +54,10 @@ const SignUp = () => (
                         isSubmitting,
                         /* and other goodies */
                     }) => (
-                        <Form onSubmit={handleSubmit}>
+                        <Form
+                            onSubmit={handleSubmit}
+                            className='unset-position'
+                        >
                             <Form.Field>
                                 <label>Email</label>
                                 <input
@@ -86,10 +93,22 @@ const SignUp = () => (
                                     />
                                 )}
                             </Form.Field>
-
-                            <Button type='submit' disabled={isSubmitting}>
-                                Submit
-                            </Button>
+                            <div className='h-16 w-full'></div>
+                            <div className='flex items-center justify-between h-16 absolute bottom-0 right-0 w-full pb-4 pr-4'>
+                                <NavLink
+                                    to='/log-in'
+                                    className='text-sm text-blue-500 hover:text-blue-700'
+                                >
+                                    I already have an account
+                                </NavLink>
+                                <Button
+                                    type='submit'
+                                    primary
+                                    disabled={isSubmitting}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
                         </Form>
                     )}
                 </Formik>

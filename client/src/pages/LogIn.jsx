@@ -12,10 +12,19 @@ const LogIn = () => (
                 tablet={8}
                 computer={8}
                 verticalAlign='middle'
+                textAlign='center'
             >
-                <Image src={logo} size='medium' />
+                <Image src={logo} size='medium' className='mx-auto' />
             </Grid.Column>
-            <Grid.Column mobile={16} tablet={8} computer={4}>
+            <Grid.Column
+                mobile={16}
+                tablet={8}
+                computer={8}
+                className='relative'
+            >
+                <h1 className='mb-4 text-right uppercase text-sm font-extrabold text-slate-400'>
+                    Log In
+                </h1>
                 <Formik
                     initialValues={{ email: '', password: '' }}
                     validate={values => {
@@ -52,7 +61,10 @@ const LogIn = () => (
                         isSubmitting,
                         /* and other goodies */
                     }) => (
-                        <Form onSubmit={handleSubmit}>
+                        <Form
+                            onSubmit={handleSubmit}
+                            className='unset-position'
+                        >
                             <Form.Field>
                                 <label>Email</label>
                                 <input
@@ -88,8 +100,8 @@ const LogIn = () => (
                                     />
                                 )}
                             </Form.Field>
-                            <div className=''></div>
-                            <div className='flex items-center justify-between h-8'>
+                            <div className='h-16 w-full'></div>
+                            <div className='flex items-center justify-between h-16 absolute bottom-0 right-0 w-full pb-4 pr-4'>
                                 <NavLink
                                     to='/sign-up'
                                     className='text-sm text-blue-500 hover:text-blue-700'

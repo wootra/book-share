@@ -1,45 +1,98 @@
 .item {
-    height: 20rem;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-}
+    --carousel-height: 20rem;
+    --detail-height: 15rem;
+    --image-height: 30rem;
 
-.carouselImage {
-    position: absolute;
-    right: -10rem;
-    bottom: -10rem;
-    height: 30rem;
-    rotate: -20deg;
-    z-index: 2;
-}
-.item {
+    height: var(--carousel-height);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    & .hoverArea {
+        position: absolute;
+        inset-inline: 2rem;
+        height: 100%;
+        top: 0;
+    }
+
+    .carouselImage {
+        position: absolute;
+        right: -10rem;
+        bottom: -10rem;
+        height: 30rem;
+        rotate: -20deg;
+        z-index: 2;
+        pointer-events: none;
+    }
+
     & :global(.active) {
         box-shadow: -40px 40px 40px rgba(0, 0, 0, 0.5);
         transition: all 0.5s ease-in-out;
         opacity: 0;
         object-fit: cover;
     }
-}
 
-.item:hover {
-    & :global(.active) {
-        rotate: 0deg;
-        bottom: 0;
-        right: 0;
-        opacity: 1;
-        height: 20rem;
-        scale: 0.9;
-        box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.798);
+    .carouselImageBack {
+        opacity: 0.3;
+        filter: blur(3px);
+        z-index: 0;
+        height: 50rem;
+        bottom: -15rem;
+        pointer-events: none;
+        user-select: none;
     }
-}
 
-.carouselImageBack {
-    opacity: 0.3;
-    filter: blur(3px);
-    z-index: 0;
-    height: 50rem;
-    bottom: -15rem;
-    pointer-events: none;
-    user-select: none;
+    .initTitle {
+        position: absolute;
+        --fontSize: clamp(2rem, 5vw, 5rem);
+        top: calc(var(--carousel-height) / 2);
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: var(--fontSize);
+        color: white;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 2;
+        pointer-events: none;
+        user-select: none;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .details {
+        position: absolute;
+        top: var(--carousel-height);
+        left: 0;
+        width: calc(100% - var(--image-height));
+        height: var(--detail-height);
+        border-radius: 1rem 1rem 0 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+        z-index: 1;
+        pointer-events: none;
+        user-select: none;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .hoverArea:hover {
+        & :global(.active) {
+            rotate: 0deg;
+            bottom: 0;
+            right: 2rem;
+            opacity: 1;
+            height: 20rem;
+            scale: 0.9;
+            box-shadow: -2px 2px 4px rgba(0, 0, 0, 0.798);
+        }
+        & .initTitle {
+            left: 2rem;
+            top: 2rem;
+            transform: translate(0, 0);
+        }
+        & .details {
+            top: calc(var(--carousel-height) - var(--detail-height));
+        }
+    }
 }
