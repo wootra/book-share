@@ -1,14 +1,29 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-const LoginContext = createContext({ user: {}, setUser: () => {} });
+const LoginContext = createContext({
+    user: {},
+    setUser: () => {},
+    logout: () => {},
+});
 
 export const LoginProvider = ({ children }) => {
     const [user, setUser] = useState({});
-
+    const navigate = useNavigate();
+    const logout = useCallback(() => {
+        setUser({});
+        navigate('/home');
+    }, [navigate]);
     const contextValue = useMemo(() => {
-        return { user, setUser };
-    }, [user]);
+        return { user, setUser, logout };
+    }, [logout, user]);
     console.log('user is updated:', user);
     return (
         <LoginContext.Provider value={contextValue}>

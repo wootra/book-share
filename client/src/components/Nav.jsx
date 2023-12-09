@@ -6,8 +6,12 @@ const Nav = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const pathname = location.pathname;
-    const { user } = useLoginInfo();
-    const onNavClick = (e, { name }) => navigate(name);
+    const { user, logout } = useLoginInfo();
+    const onNavClick = (e, { name }) => {
+        if (pathname !== name) {
+            navigate(name);
+        }
+    };
     const onUserInfoClick = (e, { value }) => navigate(value);
     return (
         <nav className={styles.nav}>
@@ -28,14 +32,15 @@ const Nav = () => {
                 >
                     Rent
                 </Menu.Item>
-
-                <Menu.Item
-                    name='/lend'
-                    active={pathname === '/lend'}
-                    onClick={onNavClick}
-                >
-                    Lend
-                </Menu.Item>
+                {user.id && (
+                    <Menu.Item
+                        name='/lend'
+                        active={pathname === '/lend'}
+                        onClick={onNavClick}
+                    >
+                        Lend
+                    </Menu.Item>
+                )}
 
                 <Menu.Menu position='right'>
                     <div className={styles.searchBar}>
@@ -59,7 +64,9 @@ const Nav = () => {
                                 </Dropdown.Item>
 
                                 <Dropdown.Divider />
-                                <Dropdown.Item>Log Out</Dropdown.Item>
+                                <Dropdown.Item onClick={logout}>
+                                    Log Out
+                                </Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     ) : (
