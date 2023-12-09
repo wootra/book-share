@@ -23,7 +23,7 @@ function App() {
                     <Nav />
                     <main>
                         <Routes path='/'>
-                            <Route idnex element={<Home />} />
+                            <Route index element={<Home />} />
                             <Route path='home' element={<Home />} />
                             <Route path='about' element={<About />} />
                             <Route path='rent' element={<Rent />} />

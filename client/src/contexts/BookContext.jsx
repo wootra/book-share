@@ -4,6 +4,7 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 import { SERVER_URL } from '../env';
@@ -18,13 +19,17 @@ const emptyArr = [];
 
 export const BookProvider = ({ children }) => {
     const [books, setBooks] = useState(null);
-
+    const loadgingRef = useRef(false);
     const initBooks = useCallback(() => {
-        if (!books) {
-            fetch(`${SERVER_URL}/books`)
+        if (!books && loadgingRef.current === false) {
+            loadgingRef.current = true;
+            fetch(`${SERVER_URL}/api/books`)
                 .then(res => res.json())
                 .then(data => setBooks(data))
-                .catch(err => console.log(err));
+                .catch(err => console.log(err))
+                .finally(() => {
+                    loadgingRef.current = true;
+                });
         }
     }, [books]);
 

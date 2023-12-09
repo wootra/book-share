@@ -1,6 +1,7 @@
 .carouselWrapper {
     width: 100%;
     box-shadow: 0 2px 5px rgba(63, 63, 63, 0.55);
+    margin-bottom: 2rem;
     > * {
         width: 100%;
         margin-inline: auto;

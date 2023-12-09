@@ -17,6 +17,6 @@ db.init_app(app)
 api = Api(app)
 
 
-api.add_resource(Users, '/users')
-api.add_resource(Books, '/books')
-api.add_resource(Rents, '/rents')
+api.add_resource(Users, '/api/users')
+api.add_resource(Books, '/api/books')
+api.add_resource(Rents, '/api/rents')
