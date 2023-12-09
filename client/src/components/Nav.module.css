@@ -14,4 +14,12 @@
         aspect-ratio: 1;
         padding: 0.5rem;
     }
+
+    .searchBar {
+        display: flex;
+        height: 100%;
+        @media screen and (max-width: 600px) {
+            display: none;
+        }
+    }
 }

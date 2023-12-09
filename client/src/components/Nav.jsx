@@ -38,16 +38,18 @@ const Nav = () => {
                 </Menu.Item>
 
                 <Menu.Menu position='right'>
-                    <Menu.Item>
-                        <Input
-                            // transparent
-                            icon={{ name: 'search', link: false }}
-                            placeholder='Search books...'
-                        />
-                    </Menu.Item>
+                    <div className={styles.searchBar}>
+                        <Menu.Item>
+                            <Input
+                                // transparent
+                                icon={{ name: 'search', link: false }}
+                                placeholder='Search books...'
+                            />
+                        </Menu.Item>
+                    </div>
                     {user.name ? (
                         <Dropdown item icon='setting' text={user.name}>
-                            <Dropdown.Menu className={styles.userInfo}>
+                            <Dropdown.Menu>
                                 <Dropdown.Item
                                     value='/userinfo/profile'
                                     content='/userinfo/profile'

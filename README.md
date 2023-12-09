@@ -160,7 +160,7 @@ end
 server ->> User : count(form_data.email)
 User -->> server : count
 alt count != 0
-    server -->> client : 403: the email already exists
+    server -->> client : 409: the email already exists
 end
 server ->> User : add(new_user)
 User -->> server : User
