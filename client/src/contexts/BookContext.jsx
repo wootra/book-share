@@ -2,6 +2,7 @@ import {
     createContext,
     useCallback,
     useContext,
+    useEffect,
     useMemo,
     useState,
 } from 'react';
@@ -35,6 +36,10 @@ export const BookProvider = ({ children }) => {
         };
     }, [books, initBooks, setBooks]);
 
+    useEffect(() => {
+        initBooks();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     return (
         <BookContext.Provider value={contextValue}>
             {children}
@@ -42,6 +47,7 @@ export const BookProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useBooks = () => {
     return useContext(BookContext);
 };
