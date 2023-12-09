@@ -2,13 +2,14 @@ import { useForm, Form as ReactHookForm } from 'react-hook-form';
 
 import { Button, Grid, Image, Message } from 'semantic-ui-react';
 import logo from '/logo.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { SERVER_URL } from '../env';
 import { EMAIL_PATTERN } from '../utils/emailPattern';
 import { useState } from 'react';
 import FormInput from '../components/FormInput';
+import { useLoginInfo } from '../contexts/LoginContext';
 
 const schema = yup
     .object({
@@ -30,21 +31,29 @@ const SignUp = () => {
         // defaultValues: { email: '', password: '' },
         resolver: yupResolver(schema),
     });
-
+    const { setUser } = useLoginInfo();
     const [error, setError] = useState('');
-
+    const navigate = useNavigate();
     console.log(watch('example')); // watch input value by passing the name of it
     const onSubmit = (data, values) => {
         fetch(`${SERVER_URL}/api/sign-up`, {
             method: 'POST',
+            // should not add content-type explicitly.
+            // Content-Type is automatically generated
+            // along with the boundary string.
+            // with below content-type setting,
+            // form data is not sent to the server.
             // headers: {
             //     'Content-Type': 'multipart/form-data',
             // },
             body: values.formData,
         })
-            .then(res => console.log(res))
+            .then(res => res.json())
+            .then(res => {
+                setUser(res);
+                navigate(-2);
+            })
             .catch(err => setError(err));
-        // console.log({ data, values });
     };
 
     return (

@@ -2,7 +2,7 @@ import { useForm, Form as ReactHookForm } from 'react-hook-form';
 
 import { Button, Grid, Image, Message } from 'semantic-ui-react';
 import logo from '/logo.png';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 import { SERVER_URL } from '../env';
 import { EMAIL_PATTERN } from '../utils/emailPattern';
@@ -10,6 +10,7 @@ import FormInput from '../components/FormInput';
 import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useLoginInfo } from '../contexts/LoginContext';
 
 const schema = yup
     .object({
@@ -28,8 +29,9 @@ const LogIn = () => {
         defaultValues: { email: '', password: '' },
         resolver: yupResolver(schema),
     });
-
+    const { setUser } = useLoginInfo();
     const [error, setError] = useState('');
+    const navigate = useNavigate();
     const onSubmit = (data, values) => {
         console.log({ data, values });
         // values.event.nativeEvent.target.action = `${SERVER_URL}/api/log-in`;
@@ -42,7 +44,13 @@ const LogIn = () => {
             // },
             body: values.formData,
         })
-            .then(res => console.log(res))
+            .then(res => res.json())
+            .then(res => {
+                setUser(res);
+            })
+            .then(() => {
+                navigate(-1);
+            })
             .catch(err => setError(err));
         // console.log({ data, values });
     };
