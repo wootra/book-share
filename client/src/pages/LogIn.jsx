@@ -2,12 +2,12 @@ import { useForm, Form as ReactHookForm } from 'react-hook-form';
 
 import { Button, Grid, Image, Message } from 'semantic-ui-react';
 import logo from '/logo.png';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 
 import { SERVER_URL } from '../env';
 import { EMAIL_PATTERN } from '../utils/emailPattern';
 import FormInput from '../components/FormInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useLoginInfo } from '../contexts/LoginContext';
@@ -32,6 +32,16 @@ const LogIn = () => {
     const { setUser } = useLoginInfo();
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    useEffect(() => {
+        if (
+            location.state?.from === 'sign-up' ||
+            location.state?.from === 'sign-in'
+        ) {
+            navigate('/home');
+        }
+    }, [location, location.state?.from, navigate]);
+
     const onSubmit = (data, values) => {
         console.log({ data, values });
         // values.event.nativeEvent.target.action = `${SERVER_URL}/api/log-in`;
@@ -44,16 +54,21 @@ const LogIn = () => {
             // },
             body: values.formData,
         })
-            .then(res => res.json())
+            .then(async res => {
+                const ret = await res.json();
+                if (!res.ok) throw new Error(ret.error);
+                return ret;
+            })
             .then(res => {
                 setUser(res);
             })
             .then(() => {
-                navigate(-1);
+                navigate(-1, { state: { from: 'sign-up' } });
             })
-            .catch(err => setError(err));
+            .catch(err => setError(err?.message ?? err));
         // console.log({ data, values });
     };
+
     return (
         <div className='full-size dimmed-background place-center'>
             <Grid className='center-modal bg-white rounded-lg'>
@@ -118,12 +133,15 @@ const LogIn = () => {
                                 },
                             }}
                         />
-
+                        {error && (
+                            <Message negative size='tiny' content={error} />
+                        )}
                         <div className='h-16 w-full'></div>
                         <div className='flex items-center justify-between h-16 absolute bottom-0 right-0 w-full pb-4 pr-4'>
                             <NavLink
                                 to='/sign-up'
                                 className='text-sm text-blue-500 hover:text-blue-700'
+                                replace
                             >
                                 Create a new account
                             </NavLink>
@@ -132,7 +150,6 @@ const LogIn = () => {
                             </Button>
                         </div>
                     </ReactHookForm>
-                    {error && <Message negative size='tiny' content={error} />}
                 </Grid.Column>
             </Grid>
         </div>

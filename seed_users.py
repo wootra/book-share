@@ -13,19 +13,6 @@ try:
             user_id="user1"
         )
         db.session.add(user1)
-        db.session.commit()
-        book1 = Book(
-            title="user1",
-            author="user1",
-            owner_id=user1.id
-        )
-        db.session.add(book1)
-        db.session.commit()
-        rent1 = Rent(
-            renter_id=user1.id,
-            book_id=book1.id
-        )
-        db.session.add(rent1)
-        db.session.commit()
+        
 except ValueError:
     print("ValueError")
