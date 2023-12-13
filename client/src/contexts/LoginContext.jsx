@@ -24,7 +24,6 @@ export const LoginProvider = ({ children }) => {
     const contextValue = useMemo(() => {
         return { user, setUser, logout };
     }, [logout, user]);
-    console.log('user is updated:', user);
     return (
         <LoginContext.Provider value={contextValue}>
             {children}

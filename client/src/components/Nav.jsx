@@ -1,7 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Dropdown, Image, Input, Menu } from 'semantic-ui-react';
+import { Dropdown, Image, Menu } from 'semantic-ui-react';
 import styles from './Nav.module.css';
 import { useLoginInfo } from '../contexts/LoginContext';
+import NavSearch from './NavSearch';
 const Nav = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -12,9 +13,12 @@ const Nav = () => {
             navigate(name);
         }
     };
+
+    const isSearchable =
+        location.pathname === '/home' || location.pathname === '/rent';
     const onUserInfoClick = (e, { value }) => navigate(value);
     return (
-        <nav className={styles.nav}>
+        <nav className={`${styles.nav}`}>
             <Menu pointing secondary color='violet'>
                 <Image src='/logo-icon.png' className='rounded-full' />
                 <Menu.Item
@@ -43,15 +47,7 @@ const Nav = () => {
                 )}
 
                 <Menu.Menu position='right'>
-                    <div className={styles.searchBar}>
-                        <Menu.Item>
-                            <Input
-                                // transparent
-                                icon={{ name: 'search', link: false }}
-                                placeholder='Search books...'
-                            />
-                        </Menu.Item>
-                    </div>
+                    <NavSearch isSearchable={isSearchable} />
                     {user.name ? (
                         <Dropdown item icon='setting' text={user.name}>
                             <Dropdown.Menu>

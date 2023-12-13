@@ -23,7 +23,7 @@ export const BookProvider = ({ children }) => {
     const initBooks = useCallback(() => {
         if (!books && loadgingRef.current === false) {
             loadgingRef.current = true;
-            fetch(`${SERVER_URL}/api/books`)
+            fetch(`${SERVER_URL}/api/books?limit=5`)
                 .then(res => res.json())
                 .then(data => setBooks(data))
                 .catch(err => console.log(err))
